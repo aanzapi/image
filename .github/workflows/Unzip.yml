@@ -21,10 +21,10 @@ jobs:
           if [ -f Upload.zip ]; then
             echo "Upload.zip ditemukan"
 
-            rm -rf resources
+            rm -rf Upload 
             unzip -o Upload.zip -d .
 
-            rm resources.zip
+            rm Upload.zip
 
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
