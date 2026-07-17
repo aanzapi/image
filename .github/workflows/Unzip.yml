@@ -1,0 +1,38 @@
+name: Auto Unzip Upload 
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unzip Upload.zip
+        run: |
+          if [ -f Upload.zip ]; then
+            echo "Upload.zip ditemukan"
+
+            rm -rf resources
+            unzip -o Upload.zip -d .
+
+            rm resources.zip
+
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            git add .
+            git commit -m "Auto extract Upload.zip" || echo "Tidak ada perubahan"
+
+            git push
+          else
+            echo "Upload.zip tidak ditemukan"
+          fi
