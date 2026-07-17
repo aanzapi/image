@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-blue-600">ImgHost</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="/gallery" class="text-gray-700 hover:text-blue-600 transition">Gallery</a>
+                    <a href="/admin" class="text-gray-700 hover:text-blue-600 transition">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Image Detail -->
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 bg-gray-50 border-b">
+                <h1 class="text-2xl font-bold text-gray-800"><%= image.original_name %></h1>
+                <p class="text-sm text-gray-500 mt-1">
+                    Uploaded: <%= new Date(image.uploaded_at).toLocaleString() %>
+                </p>
+            </div>
+
+            <div class="p-6">
+                <div class="bg-gray-100 rounded-lg p-4">
+                    <img src="/<%= image.filename %>" alt="<%= image.original_name %>" 
+                         class="w-full max-h-[600px] object-contain mx-auto">
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">File Name</p>
+                        <p class="font-medium"><%= image.original_name %></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">Size</p>
+                        <p class="font-medium"><%= (image.size / 1024).toFixed(2) %> KB</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">Type</p>
+                        <p class="font-medium"><%= image.mime_type %></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">Image URL</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="text" id="imageUrl" value="<%= baseUrl %>/<%= image.filename %>" 
+                                   readonly class="flex-1 p-2 border rounded text-sm bg-white">
+                            <button onclick="copyLink()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-4">
+                    <a href="/gallery" class="flex-1 bg-gray-200 text-gray-800 text-center px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+                        Back to Gallery
+                    </a>
+                    <a href="/" class="flex-1 bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Upload More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyLink() {
+            const url = document.getElementById('imageUrl');
+            navigator.clipboard.writeText(url.value).then(() => {
+                const btn = document.querySelector('button[onclick="copyLink()"]');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('bg-green-600');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('bg-green-600');
+                }, 2000);
+            }).catch(() => {
+                url.select();
+                document.execCommand('copy');
+                alert('Link copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
